@@ -5,7 +5,18 @@ println("UW Complex Kotlin homework")
 // use fold to compress the array of strings down into a single string
 // the final string should look like FIZZBUZZFIZZFIZZBUZZFIZZFIZZBUZZ
 //
-val mapFoldResults = ""
+val numbers = IntArray(15, {i -> i + 1})
+val mapFoldResults = numbers.map({
+    it: Int ->
+        var s: String = ""
+        if (it % 3 == 0 && it % 5 == 0) {
+            s += "FIZZBUZZ"
+        } else if (it % 3 == 0) {
+            s += "FIZZ"
+        } else if (it % 5 == 0) {
+            s += "BUZZ"
+        }
+    s}).fold("", {s1, s2 -> s1 + s2})
 
 
 // This is a utility function for your use as you choose, and as an
@@ -20,23 +31,52 @@ fun Int.times(block: () -> Unit): Unit {
 fun process(message: String, block: (String) -> String): String {
     return ">>> ${message}: {" + block(message) + "}"
 }
-val r1 = "" // call process() with message "FOO" and a block that returns "BAR"
 
+ // call process() with message "FOO" and a block that returns "BAR"
+val r1 = process("FOO", {
+    _ -> "BAR"
+})
+
+// call process() with message "FOO" and a block that upper-cases 
+// r2_message, and repeats it three times with no spaces: "WOOGAWOOGAWOOGA"
 val r2_message = "wooga"
-val r2 = "" // call process() with message "FOO" and a block that upper-cases 
-            // r2_message, and repeats it three times with no spaces: "WOOGAWOOGAWOOGA"
-
+val r2 = process("FOO", {
+    _ ->
+    var s: String = ""
+    3.times() {s += r2_message.toUpperCase()}
+    s
+}) 
 
 // write an enum-based state machine between talking and thinking
-enum class Philosopher { }
+enum class Philosopher {
+    THINKING {
+        override fun signal() = TALKING
+        override fun toString(): String {
+            return "Deep thoughts...."
+        }
+    },
+    TALKING {
+        override fun signal() = THINKING
+        override fun toString(): String {
+            return "Allow me to suggest an idea..."
+        }
+    };
+    abstract fun signal(): Philosopher
+ }
+// For bonus points
+// 1. Seneca the Younger was a Roman Stoic philosopher, statesman, dramatist, and satirist. He wrote philosophical works on Stoicism. His works and plays were all tragedies.
+// 2. The School of Stoicism.
+// 3. The School of Stoicism is a philosophy focuses on the development of self-control as a way to overcome destructive emotions.
 
 // create an class "Command" that can be used as a function (provide an "invoke()" function)
 // that takes a single parameter ("message" of type String)
 // primary constructor should take a String argument ("prompt")
 // when called, the Command object should return a String containing the prompt and then the message
 class Command(val prompt: String) {
+    operator fun invoke(message: String): String {
+        return prompt + message
+    }
 }
-
 
 
 
